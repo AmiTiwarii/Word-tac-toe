@@ -1,0 +1,252 @@
+# Word-tac-toe
+#include<iostream>
+#include <cstdlib>
+#include<ctime>
+#include <string>
+using namespace std;
+
+//tic tac toe
+class Ttac{
+public:
+char board[3][3] = { {'1','2','3'},{'4','5','6'},{'7','8','9'} };
+char turn = 'X';
+int row, column;
+bool draw = false;
+
+void display_board() {
+    system("clear");
+    cout << endl;
+    cout << "\t\tT I C   T A C   T O E" << endl;
+    cout << endl;
+    cout << "\tPLAYER1[X]\n \tPLAYER2[O]" << endl;
+    cout << endl;
+    cout << "\t\t     |     |     " << endl;
+    cout << "\t\t  " << board[0][0] << "  |  " << board[0][1] << "  |  " << board[0][2] << endl;
+    cout << "\t\t _|_|_" << endl;
+    cout << "\t\t     |     |     " << endl;
+    cout << "\t\t  " << board[1][0] << "  |  " << board[1][1] << "  |  " << board[1][2] << endl;
+    cout << "\t\t _|_|_" << endl;
+    cout << "\t\t     |     |     " << endl;
+    cout << "\t\t  " << board[2][0] << "  |  " << board[2][1] << "  |  " << board[2][2] << endl;
+    cout << "\t\t     |     |     " << endl;
+    cout << endl;
+  
+}
+void player_turn() {
+    int choise;
+
+    if (turn == 'X') {
+        cout << "\tPLAYER 1[X] TURN :";
+        cin >> choise;
+    }
+    if (turn == 'O') {
+        cout << "\tPLAYER 2[O] TURN :";
+        cin >> choise;
+    }
+    switch (choise)
+    {
+    case 1: row = 0; column = 0; break;
+    case 2: row = 0; column = 1; break;
+    case 3: row = 0; column = 2; break;
+    case 4: row = 1; column = 0; break;
+    case 5: row = 1; column = 1; break;
+    case 6: row = 1; column = 2; break;
+    case 7: row = 2; column = 0; break;
+    case 8: row = 2; column = 1; break;
+    case 9: row = 2; column = 2; break;
+    default:
+        cout << "invalid choise..!!" << endl;
+        break;
+    }
+    if (turn == 'X' && board[row][column] != 'X' && board[row][column] != 'O') {
+        board[row][column] = 'X';
+        turn = 'O';
+    }
+    else if (turn == 'O' && board[row][column] != 'X' && board[row][column] != 'O') {
+        board[row][column] = 'O';
+        turn = 'X';
+    }
+    else {
+        cout << "BOX ALREADYY FILLED...!!\n PLEASE TRYY AGAIN" << endl;
+        player_turn();
+    }
+    display_board();
+}
+
+bool gameover() {
+    // check win
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] == board[i][1] && board[i][0] == board[i][2] || board[0][i] == board[1][i] && board[0][i] == board[2][i])
+        return false;
+    }
+    if (board[0][0] == board[1][1] && board[0][0] == board[2][2] || board[0][2] == board[1][1] && board[0][2] == board[2][0]) {
+        return false;
+    }
+
+    //game playing
+    for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 3; j++)
+        if (board[i][j] != 'X' && board[i][j] != 'O') {
+            return true;
+        }
+    //game draw
+    draw = true;
+    return false;
+}
+};
+
+class Tcall : public Ttac{
+    public:
+
+void tictactoe(){
+     while (gameover()) {
+        display_board();
+        player_turn();
+        gameover();
+    }
+    if (turn == 'X' && draw == false) {
+        cout << "player 2[O] WINS!!!" << endl;
+    }
+    else if (turn == 'O'  && draw == false) {
+        cout << "player 1[X] WINS!!!" << endl;
+    }
+    else {
+        cout << "GAME DRAW!!" << endl;
+    }
+}
+//tic tac toe ends here
+};
+
+//hang man 
+class HANGMAN{
+    public:
+
+
+
+int letterFill (char guess, string secretword, string &guessword)
+{
+	int i;
+	int matches=0;
+	int len=secretword.length();
+	for (i = 0; i< len; i++)
+	{
+		// Did we already match this letter in a previous guess?
+		if (guess == guessword[i])
+			return 0;
+		// Is the guess in the secret word?
+		if (guess == secretword[i])
+		{
+			guessword[i] = guess;
+			matches++;
+		}
+	}
+	return matches;
+}
+
+};
+
+class Hcall:public HANGMAN {
+    
+public:
+const int MAX_TRIES=5;
+void hangman(){
+    string name;
+	char letter;
+	int num_of_wrong_guesses=0;
+	string word;
+	string words[] =
+	{
+		"india",
+		"nepal",
+		"malaysia",
+		"philippines",
+		"australia",
+		"iran",
+		"ethiopia",
+		"oman",
+		"indonesia"
+	};
+
+	//choose and copy a word from array of words randomly
+	srand(time(NULL));
+	int n=rand()% 10;
+	word=words[n];
+    
+	// Initialize the secret word with the * character.
+	string unknown(word.length(),'*');
+
+	// welcome the user
+	cout << "\n\nWelcome to hangman...Guess a country Name";
+	cout << "\n\nEach letter is represented by a star.";
+	cout << "\n\nYou have to type only one letter in one try";
+	cout << "\n\nYou have " << MAX_TRIES << " tries to try and guess the word.";
+	cout << "\n~~~~~~~";
+    
+	// Loop until the guesses are used up
+	while (num_of_wrong_guesses < MAX_TRIES)
+	{
+		cout << "\n\n" << unknown;
+		cout << "\n\nGuess a letter: ";
+		cin >> letter;
+		// Fill secret word with letter if the guess is correct,
+		// otherwise increment the number of wrong guesses.
+		if (letterFill(letter, word, unknown)==0)
+		{
+			cout << endl << "Whoops! That letter isn't in there!" << endl;
+			num_of_wrong_guesses++;
+		}
+		else
+		{
+			cout << endl << "You found a letter! Isn't that exciting!" << endl;
+		}
+		// Tell user how many guesses has left.
+		cout << "You have " << MAX_TRIES - num_of_wrong_guesses;
+		cout << " guesses left." << endl;
+		// Check if user guessed the word.
+		if (word==unknown)
+		{
+			cout << word << endl;
+			cout << "Yeah! You got it!";
+			break;
+		}
+	}
+	if(num_of_wrong_guesses == MAX_TRIES)
+	{
+		cout << "\nSorry, you lose...you've been hanged." << endl;
+		cout << "The word was : " << word << endl;
+	}
+	cin.ignore();
+	cin.get(); 
+}
+
+//hang man ends here
+
+};
+
+int main() {
+    Tcall T;
+    Hcall H;
+       int j;
+    cout<<"WELCOME TO \'WORD-TAC TOE\'  --  The gaming zone"<<endl;
+    cout <<"Choose one of the two interesting games and stop being bored"<<endl;
+    cout<<"\n\n";
+    
+    prompt:
+    cout<<"enter 1 for tic tac toe"<<endl;
+    cout<<"enter 2 for hang man"<<endl;
+    cin>>j;
+    if(j==1){
+        cout<<"You chose 1 now enjoy Tic-Tac Toe\n"<<endl;
+       T.tictactoe();
+    }
+    else if(j==2){
+         cout<<"You chose 2 now enjoy Hangman\n"<<endl;
+       H.hangman();
+    }
+   else {
+       cout<<"invalid\n";
+       goto prompt;
+   }
+  
+
+}
